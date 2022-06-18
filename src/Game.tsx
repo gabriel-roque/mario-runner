@@ -1,8 +1,8 @@
 import kaboom from 'kaboom';
-import * as React from 'react';
+import { useEffect } from 'react';
 
 export const Game: React.FC = () => {
-  React.useEffect(() => {
+  useEffect(() => {
     const canvasRef = document.querySelector('#game') as HTMLCanvasElement;
 
     const k = kaboom({
@@ -13,7 +13,7 @@ export const Game: React.FC = () => {
     canvasRef.width = 1000;
     canvasRef.height = 1000;
 
-    k.debug.inspect = false;
+    k.debug.inspect = true;
 
     k.loadSprite('mario', './sprites/mario-sprite.png', {
       sliceX: 13.2,
@@ -23,6 +23,8 @@ export const Game: React.FC = () => {
         run: { from: 1, to: 3, loop: true, speed: 10 },
       },
     });
+
+    k.loadSprite('pipe', './sprites/pipe.png');
 
     let score = 0;
 
@@ -57,32 +59,30 @@ export const Game: React.FC = () => {
         scoreLabel.text = `Score: ${score}`;
       });
 
-      function spawnTree() {
+      function spawnPipe() {
         k.add([
-          k.rect(48, k.rand(24, 64)),
+          k.sprite('pipe'),
+          k.scale(2),
           k.area(),
-          k.outline(4),
           k.pos(k.width(), k.height() - BASE_LINE),
           k.origin('botleft'),
-          k.color(255, 180, 255),
           k.move(k.LEFT, 240),
-          'object',
+          'pipe',
         ]);
-        k.wait(k.rand(1, 1.5), () => spawnTree());
+        k.wait(k.rand(1, 1.5), () => spawnPipe());
       }
 
-      spawnTree();
+      spawnPipe();
 
       // EVENTS
       k.onKeyPress('space', () => {
         if (mario.isGrounded()) {
-          mario.jump(700);
+          mario.jump(800);
           mario.play('jump');
         }
       });
 
-      mario.onCollide('object', () => {
-        k.shake(3);
+      mario.onCollide('pipe', () => {
         k.go('lose');
       });
 
