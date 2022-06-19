@@ -1,19 +1,25 @@
 import { Layers } from 'game';
 import { KaboomCtx } from 'kaboom';
-import { Sprites } from './sprites';
 
 export class Grass {
+  public static Sprite = {
+    Low: 'grass-low',
+    High: 'grass-high',
+  };
+
   private readonly k: KaboomCtx;
   private readonly baseLine: number;
 
-  constructor(k: KaboomCtx, baseLine: number) {
-    this.k = k;
-    this.baseLine = baseLine;
+  constructor(params: { k: KaboomCtx; baseLine: number }) {
+    this.k = params.k;
+    this.baseLine = params.baseLine;
+
+    this.spawn();
   }
 
   private low() {
     this.k.add([
-      this.k.sprite(Sprites.GrassLow),
+      this.k.sprite(Grass.Sprite.Low),
       this.k.layer(Layers.Parallax),
       this.k.scale(1.5),
       this.k.area(),
@@ -27,7 +33,7 @@ export class Grass {
 
   private high() {
     this.k.add([
-      this.k.sprite(Sprites.GrassHigh),
+      this.k.sprite(Grass.Sprite.High),
       this.k.layer(Layers.Parallax),
       this.k.scale(1.5),
       this.k.area(),
@@ -40,7 +46,7 @@ export class Grass {
     this.k.wait(this.k.rand(7, 10), () => this.high());
   }
 
-  spawnGrass() {
+  private spawn() {
     this.high();
     this.low();
   }

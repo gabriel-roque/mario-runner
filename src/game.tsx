@@ -13,6 +13,11 @@ export enum Layers {
   Game = 'game',
 }
 
+export enum Scenes {
+  Game = 'game',
+  Lose = 'lose',
+}
+
 export const Game: React.FC = () => {
   const BASE_LINE = 55;
   const WIDTH_FLOOR = 204;
@@ -23,15 +28,15 @@ export const Game: React.FC = () => {
     const k = new Kaboom().createCtx();
     new Sprite(k).loadSprites();
 
-    k.scene('game', () => {
+    k.scene(Scenes.Game, () => {
       k.layers(
         [Layers.Background, Layers.Parallax, Layers.Pipe, Layers.Game],
         Layers.Game
       );
 
-      new Pipe(k, BASE_LINE).spawnPipe();
-      new Grass(k, BASE_LINE).spawnGrass();
-      new Cloud(k).spawnClouds();
+      new Pipe({ k, baseLine: BASE_LINE });
+      new Grass({ k, baseLine: BASE_LINE });
+      new Cloud({ k });
       new Mario({ k });
 
       k.add([
@@ -106,11 +111,11 @@ export const Game: React.FC = () => {
 
       playAgain.onClick(() => {
         score = 0;
-        k.go('game');
+        k.go(Scenes.Lose);
       });
     });
 
-    k.go('game');
+    k.go(Scenes.Game);
   }, []);
 
   return <></>;

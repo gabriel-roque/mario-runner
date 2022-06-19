@@ -1,19 +1,25 @@
 import { Layers } from 'game';
 import { KaboomCtx } from 'kaboom';
-import { Sprites } from './sprites';
 
 export class Cloud {
+  public static Sprite = {
+    One: 'cloud-one',
+    Double: 'cloud-double',
+  };
+
   private readonly k: KaboomCtx;
 
-  constructor(k: KaboomCtx) {
-    this.k = k;
+  constructor(params: { k: KaboomCtx }) {
+    this.k = params.k;
+
+    this.spawn();
   }
 
   private one() {
     const areaAllowSpawn = this.k.height() / 2;
 
     this.k.add([
-      this.k.sprite(Sprites.CloudOne),
+      this.k.sprite(Cloud.Sprite.One),
       this.k.layer(Layers.Parallax),
       this.k.scale(0.3),
       this.k.area(),
@@ -32,7 +38,7 @@ export class Cloud {
     const areaAllowSpawn = this.k.height() / 3;
 
     this.k.add([
-      this.k.sprite(Sprites.CloudDouble),
+      this.k.sprite(Cloud.Sprite.Double),
       this.k.layer(Layers.Parallax),
       this.k.scale(0.3),
       this.k.area(),
@@ -47,7 +53,7 @@ export class Cloud {
     this.k.wait(this.k.rand(9, 12), () => this.double());
   }
 
-  spawnClouds() {
+  private spawn() {
     this.one();
     this.double();
   }

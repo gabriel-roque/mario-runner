@@ -1,19 +1,22 @@
 import { Layers } from 'game';
 import { KaboomCtx } from 'kaboom';
-import { Sprites } from './sprites';
 
 export class Pipe {
+  public static Sprite = 'pipe';
+
   private readonly k: KaboomCtx;
   private readonly baseLine: number;
 
-  constructor(k: KaboomCtx, baseLine: number) {
-    this.k = k;
-    this.baseLine = baseLine;
+  constructor(params: { k: KaboomCtx; baseLine: number }) {
+    this.k = params.k;
+    this.baseLine = params.baseLine;
+
+    this.spawn();
   }
 
-  spawnPipe() {
+  private spawn() {
     this.k.add([
-      this.k.sprite(Sprites.Pipe),
+      this.k.sprite(Pipe.Sprite),
       this.k.layer(Layers.Pipe),
       this.k.scale(2),
       this.k.area(),
@@ -22,6 +25,6 @@ export class Pipe {
       this.k.move(this.k.LEFT, 240),
       'pipe',
     ]);
-    this.k.wait(this.k.rand(1, 2), () => this.spawnPipe());
+    this.k.wait(this.k.rand(1, 2), () => this.spawn());
   }
 }

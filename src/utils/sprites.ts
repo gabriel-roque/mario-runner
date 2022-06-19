@@ -1,15 +1,12 @@
 import { KaboomCtx } from 'kaboom';
+import { Cloud } from './cloud';
+import { Grass } from './grass';
 import { Mario } from './mario';
+import { Pipe } from './pipe';
 
 export enum Sprites {
-  Mario = 'mario',
-  Pipe = 'pipe',
   Floor = 'floor',
   Background = 'background',
-  GrassLow = 'grass-low',
-  GrassHigh = 'grass-high',
-  CloudOne = 'cloud-one',
-  CloudDouble = 'cloud-double',
 }
 
 export class Sprite {
@@ -20,7 +17,7 @@ export class Sprite {
   }
 
   loadSprites(): void {
-    this.k.loadSprite(Sprites.Mario, './sprites/mario-sprite.png', {
+    this.k.loadSprite(Mario.Sprite, './sprites/mario-sprite.png', {
       sliceX: 13.2,
       sliceY: 1,
       anims: {
@@ -29,7 +26,7 @@ export class Sprite {
       },
     });
 
-    this.k.loadSprite(Sprites.Pipe, './sprites/pipe.png');
+    this.k.loadSprite(Pipe.Sprite, './sprites/pipe.png');
     this.k.loadSprite(Sprites.Floor, './sprites/floor-mario.png', {
       sliceX: 2,
       sliceY: 1,
@@ -39,9 +36,9 @@ export class Sprite {
     });
 
     this.k.loadSprite(Sprites.Background, './sprites/bg-mario.png');
-    this.k.loadSprite(Sprites.GrassLow, './sprites/grass-low.png');
-    this.k.loadSprite(Sprites.GrassHigh, './sprites/grass-high.png');
-    this.k.loadSprite(Sprites.CloudOne, './sprites/cloud-one.png');
-    this.k.loadSprite(Sprites.CloudDouble, './sprites/cloud-double.png');
+    this.k.loadSprite(Grass.Sprite.Low, './sprites/grass-low.png');
+    this.k.loadSprite(Grass.Sprite.High, './sprites/grass-high.png');
+    this.k.loadSprite(Cloud.Sprite.One, './sprites/cloud-one.png');
+    this.k.loadSprite(Cloud.Sprite.Double, './sprites/cloud-double.png');
   }
 }
