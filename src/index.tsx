@@ -1,5 +1,5 @@
-import { Canvas } from 'Canvas';
-import { Game } from 'Game';
+import { Canvas } from 'canvas';
+import { Game } from 'game';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
