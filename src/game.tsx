@@ -29,16 +29,10 @@ export const Game: React.FC = () => {
         Layers.Game
       );
 
-      // COMPONENTS;
-      const mario = k.add([
-        k.sprite(Sprites.Mario),
-        k.layer(Layers.Game),
-        k.pos(30, 352),
-        k.scale(3),
-        k.area(),
-        k.body(),
-      ]);
-      mario.play(Mario.Anims.Run);
+      new Pipe(k, BASE_LINE).spawnPipe();
+      new Grass(k, BASE_LINE).spawnGrass();
+      new Cloud(k).spawnClouds();
+      new Mario({ k });
 
       k.add([
         k.sprite(Sprites.Background),
@@ -76,10 +70,6 @@ export const Game: React.FC = () => {
         scoreLabel.text = `Score: ${score}`;
       });
 
-      new Pipe(k, BASE_LINE).spawnPipe();
-      new Grass(k, BASE_LINE).spawnGrass();
-      new Cloud(k).spawnClouds();
-
       setInterval(() => {
         k.get('pipe').forEach((pipe) => {
           if (pipe.pos.x <= -50) pipe.destroy();
@@ -91,23 +81,6 @@ export const Game: React.FC = () => {
           if (cloud.pos.x <= -300) cloud.destroy();
         });
       }, 1000);
-
-      // EVENTS
-      k.onKeyPress('space', () => {
-        if (mario.isGrounded()) {
-          mario.jump(800);
-          mario.play('jump');
-        }
-      });
-
-      mario.onCollide('pipe', () => {
-        // k.go('lose');
-      });
-
-      mario.onCollide('floor', () => {
-        mario.frame = 0;
-        mario.play('run');
-      });
     });
 
     k.scene('lose', () => {
