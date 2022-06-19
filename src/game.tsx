@@ -1,6 +1,9 @@
-import { KaboomCtx } from 'kaboom';
 import { useEffect } from 'react';
+import { Cloud } from 'utils/cloud';
+import { Grass } from 'utils/grass';
 import { Kaboom } from 'utils/kaboom';
+import { Mario } from 'utils/mario';
+import { Pipe } from 'utils/pipe';
 import { Sprite, Sprites } from 'utils/sprites';
 
 export enum Layers {
@@ -13,87 +16,6 @@ export enum Layers {
 export const Game: React.FC = () => {
   const BASE_LINE = 55;
   const WIDTH_FLOOR = 204;
-
-  function spawnGrass(k: KaboomCtx) {
-    function high() {
-      k.add([
-        k.sprite(Sprites.GrassHigh),
-        k.layer(Layers.Parallax),
-        k.scale(1.5),
-        k.area(),
-        k.pos(k.width(), k.height() - BASE_LINE),
-        k.origin('botleft'),
-        k.move(k.LEFT, 100),
-        k.color(211, 169, 16),
-        'grass',
-      ]);
-      k.wait(k.rand(7, 10), () => high());
-    }
-
-    function low() {
-      k.add([
-        k.sprite(Sprites.GrassLow),
-        k.layer(Layers.Parallax),
-        k.scale(1.5),
-        k.area(),
-        k.pos(k.width(), k.height() - BASE_LINE),
-        k.origin('botleft'),
-        k.move(k.LEFT, 150),
-        'grass',
-      ]);
-      k.wait(k.rand(9, 12), () => low());
-    }
-
-    high();
-    low();
-  }
-
-  function spawnPipe(k: KaboomCtx) {
-    k.add([
-      k.sprite(Sprites.Pipe),
-      k.layer(Layers.Pipe),
-      k.scale(2),
-      k.area(),
-      k.pos(k.width(), k.height() - BASE_LINE),
-      k.origin('botleft'),
-      k.move(k.LEFT, 240),
-      'pipe',
-    ]);
-    k.wait(k.rand(1, 2), () => spawnPipe(k));
-  }
-
-  function spawnClouds(k: KaboomCtx) {
-    function one() {
-      k.add([
-        k.sprite(Sprites.CloudOne),
-        k.layer(Layers.Parallax),
-        k.scale(0.3),
-        k.area(),
-        k.pos(k.width(), k.rand(k.height() / 2 - 60, k.height() / 2)),
-        k.origin('botleft'),
-        k.move(k.LEFT, 75),
-        'grass',
-      ]);
-      k.wait(k.rand(7, 10), () => one());
-    }
-
-    function double() {
-      k.add([
-        k.sprite(Sprites.CloudDouble),
-        k.layer(Layers.Parallax),
-        k.scale(0.3),
-        k.area(),
-        k.pos(k.width(), k.rand(k.height() / 3 - 50, k.height() / 3 + 50)),
-        k.origin('botleft'),
-        k.move(k.LEFT, 50),
-        'grass',
-      ]);
-      k.wait(k.rand(9, 12), () => double());
-    }
-
-    one();
-    double();
-  }
 
   useEffect(() => {
     let score = 0;
@@ -116,7 +38,7 @@ export const Game: React.FC = () => {
         k.area(),
         k.body(),
       ]);
-      mario.play('run');
+      mario.play(Mario.Anims.Run);
 
       k.add([
         k.sprite(Sprites.Background),
@@ -154,9 +76,9 @@ export const Game: React.FC = () => {
         scoreLabel.text = `Score: ${score}`;
       });
 
-      spawnPipe(k);
-      spawnGrass(k);
-      spawnClouds(k);
+      new Pipe(k, BASE_LINE).spawnPipe();
+      new Grass(k, BASE_LINE).spawnGrass();
+      new Cloud(k).spawnClouds();
 
       setInterval(() => {
         k.get('pipe').forEach((pipe) => {
@@ -164,6 +86,9 @@ export const Game: React.FC = () => {
         });
         k.get('grass').forEach((grass) => {
           if (grass.pos.x <= -300) grass.destroy();
+        });
+        k.get('cloud').forEach((cloud) => {
+          if (cloud.pos.x <= -300) cloud.destroy();
         });
       }, 1000);
 

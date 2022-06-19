@@ -1,4 +1,5 @@
 import { KaboomCtx } from 'kaboom';
+import { Mario } from './mario';
 
 export enum Sprites {
   Mario = 'mario',
@@ -23,8 +24,8 @@ export class Sprite {
       sliceX: 13.2,
       sliceY: 1,
       anims: {
-        jump: { from: 7, to: 9 },
-        run: { from: 1, to: 3, loop: true, speed: 10 },
+        [Mario.Anims.Jump]: { from: 7, to: 9 },
+        [Mario.Anims.Run]: { from: 1, to: 3, loop: true, speed: 10 },
       },
     });
 
