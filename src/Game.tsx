@@ -1,20 +1,25 @@
-import kaboom from 'kaboom';
+import kaboom, { KaboomCtx } from 'kaboom';
 import { useEffect } from 'react';
 
 export const Game: React.FC = () => {
-  useEffect(() => {
+  function setupKaboom(): KaboomCtx {
     const canvasRef = document.querySelector('#game') as HTMLCanvasElement;
 
     const k = kaboom({
       global: false,
       canvas: canvasRef,
+      crisp: false,
     });
 
     canvasRef.width = 1000;
-    canvasRef.height = 1000;
+    canvasRef.height = 500;
 
-    k.debug.inspect = true;
+    k.debug.inspect = false;
 
+    return k;
+  }
+
+  function loadSprites(k: KaboomCtx) {
     k.loadSprite('mario', './sprites/mario-sprite.png', {
       sliceX: 13.2,
       sliceY: 1,
@@ -25,34 +30,57 @@ export const Game: React.FC = () => {
     });
 
     k.loadSprite('pipe', './sprites/pipe.png');
+    k.loadSprite('floor', './sprites/floor-mario.png', {
+      sliceX: 2,
+      sliceY: 1,
+      anims: {
+        moviment: { from: 0, to: 1, loop: true, speed: 7 },
+      },
+    });
+  }
+
+  useEffect(() => {
+    const k = setupKaboom();
+    loadSprites(k);
 
     let score = 0;
 
     k.scene('game', () => {
-      const BASE_LINE = 300;
+      const BASE_LINE = 55;
+      const WIDTH_FLOOR = 204;
 
       // COMPONENTS;
       const mario = k.add([
         k.sprite('mario'),
-        k.pos(80, 630),
+        k.pos(30, 352),
         k.scale(3),
         k.area(),
         k.body(),
       ]);
-
       mario.play('run');
 
-      k.add([
-        k.rect(k.width(), 48),
-        k.pos(0, k.height() - BASE_LINE),
-        k.outline(4),
-        k.area(),
-        k.solid(),
-        k.color(127, 200, 255),
-        'floor',
-      ]);
+      for (
+        let index = 0;
+        index < Math.round(k.width() / WIDTH_FLOOR);
+        index++
+      ) {
+        const x = index > 0 ? WIDTH_FLOOR * index : 0;
+        const floor = k.add([
+          k.sprite('floor'),
+          k.scale(3),
+          k.pos(x, k.height() - BASE_LINE),
+          k.area(),
+          k.solid(),
+          'floor',
+          `floor-${index + 1}`,
+        ]);
+        floor.play('moviment');
+      }
 
-      const scoreLabel = k.add([k.text(`Score: ${score}`), k.pos(24, 24)]);
+      const scoreLabel = k.add([
+        k.text(`Score: ${score}`, { size: 40 }),
+        k.pos(24, 24),
+      ]);
 
       k.onUpdate(() => {
         score++;
@@ -69,10 +97,15 @@ export const Game: React.FC = () => {
           k.move(k.LEFT, 240),
           'pipe',
         ]);
-        k.wait(k.rand(1, 1.5), () => spawnPipe());
+        k.wait(k.rand(1, 2), () => spawnPipe());
       }
-
       spawnPipe();
+
+      setInterval(() => {
+        k.get('pipe').forEach((pipe) => {
+          if (pipe.pos.x <= -50) pipe.destroy();
+        });
+      }, 1000);
 
       // EVENTS
       k.onKeyPress('space', () => {
@@ -93,23 +126,30 @@ export const Game: React.FC = () => {
     });
 
     k.scene('lose', () => {
-      k.add([k.text('Game Over'), k.pos(k.center()), k.origin('center')]);
+      k.add([
+        k.text('Game Over'),
+        k.pos(k.center().x, k.center().y - 50),
+        k.origin('center'),
+      ]);
       k.add([
         k.text(`Score: ${score}`, { size: 45 }),
         k.area({ cursor: 'mouse' }),
-        k.pos(k.center().x, k.center().y + 100),
+        k.pos(k.center()),
         k.origin('center'),
       ]);
 
       const playAgain = k.add([
         k.text('Play Again!', { size: 45 }),
-        k.pos(k.center().x, k.center().y + 200),
+        k.pos(k.center().x, k.center().y + 50),
         k.area({ cursor: 'pointer' }),
         k.scale(1),
         k.origin('center'),
       ]);
 
-      playAgain.onClick(() => k.go('game'));
+      playAgain.onClick(() => {
+        score = 0;
+        k.go('game');
+      });
     });
 
     k.go('game');
