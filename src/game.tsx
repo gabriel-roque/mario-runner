@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
+import { BackgroundGrass } from 'utils/background-grass';
 import { Cloud } from 'utils/cloud';
+import { FloorGrass } from 'utils/floor-grass';
 import { Grass } from 'utils/grass';
 import { Kaboom } from 'utils/kaboom';
 import { Mario } from 'utils/mario';
 import { Pipe } from 'utils/pipe';
-import { Sprite, Sprites } from 'utils/sprites';
+import { Sprite } from 'utils/sprites';
 
 export enum Layers {
   Background = 'background',
@@ -20,7 +22,6 @@ export enum Scenes {
 
 export const Game: React.FC = () => {
   const BASE_LINE = 55;
-  const WIDTH_FLOOR = 204;
 
   useEffect(() => {
     let score = 0;
@@ -34,36 +35,12 @@ export const Game: React.FC = () => {
         Layers.Game
       );
 
-      new Pipe({ k, baseLine: BASE_LINE });
+      new FloorGrass({ k, baseLine: BASE_LINE });
       new Grass({ k, baseLine: BASE_LINE });
+      new Pipe({ k, baseLine: BASE_LINE });
+      new BackgroundGrass({ k });
       new Cloud({ k });
       new Mario({ k });
-
-      k.add([
-        k.sprite(Sprites.Background),
-        k.layer(Layers.Background),
-        k.scale(2),
-        k.pos(k.center().x, 250),
-        k.origin('center'),
-      ]);
-
-      for (
-        let index = 0;
-        index < Math.round(k.width() / WIDTH_FLOOR);
-        index++
-      ) {
-        const x = index > 0 ? WIDTH_FLOOR * index : 0;
-        const floor = k.add([
-          k.sprite(Sprites.Floor),
-          k.scale(3),
-          k.pos(x, k.height() - BASE_LINE),
-          k.area(),
-          k.solid(),
-          'floor',
-          `floor-${index + 1}`,
-        ]);
-        floor.play('moviment');
-      }
 
       const scoreLabel = k.add([
         k.text(`Score: ${score}`, { size: 40 }),

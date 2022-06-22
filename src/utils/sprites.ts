@@ -1,13 +1,10 @@
 import { KaboomCtx } from 'kaboom';
+import { BackgroundGrass } from './background-grass';
 import { Cloud } from './cloud';
+import { FloorGrass } from './floor-grass';
 import { Grass } from './grass';
 import { Mario } from './mario';
 import { Pipe } from './pipe';
-
-export enum Sprites {
-  Floor = 'floor',
-  Background = 'background',
-}
 
 export class Sprite {
   private readonly k: KaboomCtx;
@@ -27,7 +24,7 @@ export class Sprite {
     });
 
     this.k.loadSprite(Pipe.Sprite, './sprites/pipe.png');
-    this.k.loadSprite(Sprites.Floor, './sprites/floor-mario.png', {
+    this.k.loadSprite(FloorGrass.Sprite, './sprites/floor-mario.png', {
       sliceX: 2,
       sliceY: 1,
       anims: {
@@ -35,7 +32,7 @@ export class Sprite {
       },
     });
 
-    this.k.loadSprite(Sprites.Background, './sprites/bg-mario.png');
+    this.k.loadSprite(BackgroundGrass.Sprite, './sprites/bg-mario.png');
     this.k.loadSprite(Grass.Sprite.Low, './sprites/grass-low.png');
     this.k.loadSprite(Grass.Sprite.High, './sprites/grass-high.png');
     this.k.loadSprite(Cloud.Sprite.One, './sprites/cloud-one.png');
