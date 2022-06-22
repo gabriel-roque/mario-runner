@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BackgroundGrass } from 'utils/background-grass';
 import { Cloud } from 'utils/cloud';
+import { Coin } from 'utils/coin';
 import { FloorGrass } from 'utils/floor-grass';
 import { Grass } from 'utils/grass';
 import { Kaboom } from 'utils/kaboom';
@@ -31,7 +32,7 @@ export const Game: React.FC = () => {
     new Sprite(k).loadSprites();
     new Sound(k).loadSounds();
 
-    const music = k.play(Sounds.MusicTheme, { volume: 0.3, loop: true });
+    const music = k.play(Sounds.MusicTheme, { volume: 0.2, loop: true });
 
     k.scene(Scenes.Game, () => {
       k.layers(
@@ -54,6 +55,7 @@ export const Game: React.FC = () => {
       new FloorGrass({ k, baseLine: BASE_LINE });
       new Grass({ k, baseLine: BASE_LINE });
       new Pipe({ k, baseLine: BASE_LINE });
+      new Coin({ k });
       new BackgroundGrass({ k });
       new Cloud({ k });
       new Mario({ k });

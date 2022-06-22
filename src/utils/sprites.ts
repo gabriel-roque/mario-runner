@@ -1,6 +1,7 @@
 import { KaboomCtx } from 'kaboom';
 import { BackgroundGrass } from './background-grass';
 import { Cloud } from './cloud';
+import { Coin } from './coin';
 import { FloorGrass } from './floor-grass';
 import { Grass } from './grass';
 import { Mario } from './mario';
@@ -29,6 +30,12 @@ export class Sprite {
       sliceY: 1,
       anims: {
         moviment: { from: 0, to: 1, loop: true, speed: 7 },
+      },
+    });
+    this.k.loadSprite(Coin.Sprite, './sprites/coin.png', {
+      sliceX: 4,
+      anims: {
+        [Coin.Anims.Loop]: { from: 0, to: 3, loop: true },
       },
     });
 
