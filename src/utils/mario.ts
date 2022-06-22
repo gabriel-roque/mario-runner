@@ -9,6 +9,7 @@ import {
   ScaleComp,
   SpriteComp,
 } from 'kaboom';
+import { Sounds } from './sound';
 
 enum Anims {
   Jump = 'jump',
@@ -51,11 +52,12 @@ export class Mario {
       if (this.mario.isGrounded()) {
         this.mario.jump(800);
         this.mario.play(Mario.Anims.Jump);
+        this.k.play(Sounds.Jump);
       }
     });
 
     this.mario.onCollide('pipe', () => {
-      // this.k.go('lose');
+      this.k.go('lose');
     });
 
     this.mario.onCollide('floor', () => {

@@ -6,6 +6,7 @@ import { Grass } from 'utils/grass';
 import { Kaboom } from 'utils/kaboom';
 import { Mario } from 'utils/mario';
 import { Pipe } from 'utils/pipe';
+import { Sound, Sounds } from 'utils/sound';
 import { Sprite } from 'utils/sprites';
 
 export enum Layers {
@@ -28,12 +29,27 @@ export const Game: React.FC = () => {
 
     const k = new Kaboom().createCtx();
     new Sprite(k).loadSprites();
+    new Sound(k).loadSounds();
+
+    const music = k.play(Sounds.MusicTheme, { volume: 0.3, loop: true });
 
     k.scene(Scenes.Game, () => {
       k.layers(
         [Layers.Background, Layers.Parallax, Layers.Pipe, Layers.Game],
         Layers.Game
       );
+
+      setTimeout(() => {
+        music.pause();
+      }, 500);
+
+      k.onKeyPress('m', () => {
+        if (music.isPaused()) {
+          music.play();
+        } else {
+          music.pause();
+        }
+      });
 
       new FloorGrass({ k, baseLine: BASE_LINE });
       new Grass({ k, baseLine: BASE_LINE });
@@ -66,6 +82,7 @@ export const Game: React.FC = () => {
     });
 
     k.scene('lose', () => {
+      new BackgroundGrass({ k });
       k.add([
         k.text('Game Over'),
         k.pos(k.center().x, k.center().y - 50),
@@ -88,7 +105,7 @@ export const Game: React.FC = () => {
 
       playAgain.onClick(() => {
         score = 0;
-        k.go(Scenes.Lose);
+        k.go(Scenes.Game);
       });
     });
 

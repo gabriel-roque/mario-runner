@@ -13,7 +13,7 @@ export class Kaboom {
     canvasRef.width = 1000;
     canvasRef.height = 500;
 
-    k.debug.inspect = true;
+    k.debug.inspect = false;
 
     return k;
   }
