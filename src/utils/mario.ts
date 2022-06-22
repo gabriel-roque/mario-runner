@@ -4,6 +4,7 @@ import {
   BodyComp,
   GameObj,
   KaboomCtx,
+  Key,
   LayerComp,
   PosComp,
   ScaleComp,
@@ -51,11 +52,27 @@ export class Mario {
   }
 
   private events() {
-    this.k.onKeyPress('space', () => {
-      if (this.mario.isGrounded()) {
-        this.mario.jump(800);
-        this.mario.play(Mario.Anims.Jump);
-        this.k.play(Sounds.Jump);
+    const keysAllowJump: Key[] = ['up', 'space'];
+
+    keysAllowJump.forEach((key: Key) => {
+      this.k.onKeyPress(key, () => {
+        if (this.mario.isGrounded()) {
+          this.mario.jump(800);
+          this.mario.play(Mario.Anims.Jump);
+          this.k.play(Sounds.Jump);
+        }
+      });
+    });
+
+    this.k.onKeyDown('right', () => {
+      if (this.mario.pos.x <= 850) {
+        this.mario.move(200, 0);
+      }
+    });
+
+    this.k.onKeyDown('left', () => {
+      if (this.mario.pos.x >= 30) {
+        this.mario.move(-200, 0);
       }
     });
 
