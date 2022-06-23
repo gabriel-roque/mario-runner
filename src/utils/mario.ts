@@ -92,9 +92,9 @@ export class Mario {
       this.mario.play(Mario.Anims.Run);
     });
 
-    this.mario.onCollide(Coin.Sprite, (obj) => {
+    this.mario.onCollide(Coin.Sprite, (coin) => {
       this.k.play(Sounds.Coin, { volume: 0.1 });
-      obj.destroy();
+      coin.destroy();
 
       this?.onCollideCoin && this.onCollideCoin();
     });
