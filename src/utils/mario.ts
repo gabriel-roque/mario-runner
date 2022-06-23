@@ -84,7 +84,7 @@ export class Mario {
     });
 
     this.mario.onCollide(Pipe.Sprite, () => {
-      // this.k.go('lose');
+      this.k.go('lose');
     });
 
     this.mario.onCollide(FloorGrass.Sprite, () => {
