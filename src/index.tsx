@@ -1,5 +1,4 @@
-import { Canvas } from 'canvas';
-import { Game } from 'game';
+import { App } from 'app';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
@@ -9,8 +8,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Canvas />
-    <Game />
+    <App />
   </React.StrictMode>
 );
 

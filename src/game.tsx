@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { GlobalContext } from 'contexts/global';
+import { useContext, useEffect } from 'react';
 import { BackgroundGrass } from 'utils/background-grass';
 import { Cloud } from 'utils/cloud';
 import { Coin } from 'utils/coin';
@@ -24,10 +25,11 @@ export enum Scenes {
 
 export const Game: React.FC = () => {
   const BASE_LINE = 55;
+  const globalApi = useContext(GlobalContext);
+  const { state, setState } = globalApi;
+  let { score } = state;
 
   useEffect(() => {
-    let score = 0;
-
     const k = new Kaboom().createCtx();
     new Sprite(k).loadSprites();
     new Sound(k).loadSounds();
@@ -58,7 +60,12 @@ export const Game: React.FC = () => {
       new Coin({ k });
       new BackgroundGrass({ k });
       new Cloud({ k });
-      new Mario({ k });
+      const mario = new Mario({ k });
+
+      mario.onCollideCoin = () => {
+        score += 100;
+        setState({ score });
+      };
 
       const scoreLabel = k.add([
         k.text(`Score: ${score}`, { size: 40 }),
@@ -67,6 +74,7 @@ export const Game: React.FC = () => {
 
       k.onUpdate(() => {
         score++;
+        setState({ score });
         scoreLabel.text = `Score: ${score}`;
       });
 
@@ -107,6 +115,7 @@ export const Game: React.FC = () => {
 
       playAgain.onClick(() => {
         score = 0;
+        setState({ score });
         k.go(Scenes.Game);
       });
     });

@@ -27,15 +27,22 @@ type MarioGameObj = GameObj<
 export class Mario {
   public static Sprite = 'mario';
   public static Anims = Anims;
-  private readonly mario: MarioGameObj;
+  public readonly mario: MarioGameObj;
 
   private readonly k: KaboomCtx;
+  public onCollideCoin?: Function;
 
-  constructor(params: { k: KaboomCtx }) {
+  constructor(params: { k: KaboomCtx; onCollideCoin?: Function }) {
     this.k = params.k;
+
+    if (params.onCollideCoin) {
+      this.onCollideCoin = params.onCollideCoin;
+    }
 
     this.mario = this.spawn();
     this.events();
+
+    return this;
   }
 
   private spawn() {
@@ -88,6 +95,8 @@ export class Mario {
     this.mario.onCollide(Coin.Sprite, (obj) => {
       this.k.play(Sounds.Coin, { volume: 0.1 });
       obj.destroy();
+
+      this?.onCollideCoin && this.onCollideCoin();
     });
   }
 }
