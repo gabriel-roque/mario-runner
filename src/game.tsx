@@ -43,9 +43,9 @@ export const Game: React.FC = () => {
         Layers.Game
       );
 
-      setTimeout(() => {
-        music.pause();
-      }, 500);
+      // setTimeout(() => {
+      //   music.pause();
+      // }, 500);
 
       k.onKeyPress('m', () => {
         if (music.isPaused()) {
