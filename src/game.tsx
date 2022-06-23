@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { GlobalContext } from 'contexts/global';
 import { useContext, useEffect } from 'react';
 import { BackgroundGrass } from 'utils/background-grass';
